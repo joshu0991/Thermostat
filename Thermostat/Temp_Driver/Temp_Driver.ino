@@ -20,33 +20,32 @@ void loop(){
  sensors.requestTemperatures();
  float current_temp1; 
  float farenheit;
- char tmpC[6];
- char oTmp[6];
  
  current_temp1= sensors.getTempCByIndex(0);
  farenheit =((current_temp1 * 1.8) + 32.0);
- dtostrf(current_temp1, 6, 2, tmpC);
  
  delay(100);
- //Serial.print("Temperature "); Serial.println(farenheit);
  float sense = analogRead(A1);
  val = map(sense, 0, 1023, 50, 105);
  delay(100); 
- dtostrf(val, 6, 2, oTmp);
  
-  Serial.println(tmpC);
+ Serial.println(val);
+ Serial.println(current_temp1);
  
-  int controller = farenheit - val;
+  int tempPlusFive = farenheit + 5;
+  int tempMinusFive = farenheit - 5;
   
-  if(controller >= 10){
-    digitalWrite(8, LOW);//heat
-    delay(5000);
+  if(val < tempPlusFive && val > tempMinusFive){
     digitalWrite(8, HIGH);
+    digitalWrite(9, HIGH);
   }
-  if(controller <= -10){
-  digitalWrite(9, LOW);//AC
-  delay(5000);
-  digitalWrite(9, HIGH);
+  else if(val >= tempPlusFive){
+    digitalWrite(8, HIGH);
+    digitalWrite(9, LOW);//heat
+  }
+   else if(val <= tempMinusFive){
+    digitalWrite(9, HIGH);
+    digitalWrite(8, LOW);//AC
   }
  
 }
